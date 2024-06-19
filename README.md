@@ -1,2 +1,24 @@
 # Youtube
-Python ile geliştirilen bir Youtube paneli
+Python programlama dili kullanılarak oluşturulan bu Youtube panelinde:
+1. Video bilgisi çekme
+2. Video küçük resim indirme
+3. Video indirme
+4. Videodan ses indirme
+
+gibi işlemler yapılabilir. Lütfen programın kaynak kodlarını almadan önce lisans dosyasını inceleyin ve;
+@yuns.eemrree Instagram hesabından benimle iletişime geçin.
+Ayrıca Instagram hesabımı takip ederek yeni projelerden haberdar olabilirsiniz.
+
+# PROGRAM KULLANIMI
+
+Programı kullanabilmek için bazı modül ve paketleri yüklemeniz gerekiyor. Bunlar;
+1. Art Modülü
+2. Tabulate Modülü
+3. Pytube Modülü
+
+bu modülleri kurup sonrasında terminal kodları ile programı kullanabilirsiniz. Bunun için terminal kod satırına;
+1. pip install art
+2. pip install tabulate
+3. pip install pytube
+
+yazmanız yeterlidir. Sonrasında programı kullanabilirsiniz.
