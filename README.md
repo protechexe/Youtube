@@ -14,7 +14,8 @@ Ayrıca Instagram hesabımı takip ederek yeni projelerden haberdar olabilirsini
 Programı kullanabilmek için bazı modül ve paketleri yüklemeniz gerekiyor. Bunlar;
 1. Art Modülü
 2. Tabulate Modülü
-3. Pytube Modülü
+3. yt_dlp Modülü
+4. Termcolor Modülü
 
 bu modülleri kurup sonrasında terminal kodları ile programı kullanabilirsiniz. Bunun için terminal kod satırına;
 
