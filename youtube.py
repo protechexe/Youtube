@@ -123,7 +123,7 @@ def VideoIndirme():
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video İndiriliyor, lütfen bekleyin..")
 
-        download_path = os.path.join(os.path.expanduser("~"), "Downloads")  # Varsayılan Termux indirme klasörü
+        download_path = GetDownloadPath()
         PrintInfo(f"İndirme dizini: {download_path}")
 
         ydl_opts = {
@@ -136,7 +136,7 @@ def VideoIndirme():
 
         # İndirilen dosyayı Android'in indirme klasörüne taşı
         downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
-        shutil.move(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0/Download", downloaded_filename))
+        os.rename(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0/Download", downloaded_filename))
 
         PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{downloaded_filename}")
 
@@ -152,7 +152,7 @@ def SesIndirme():
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video sese dönüştürülüyor, lütfen bekleyin..")
 
-        download_path = os.path.join(os.path.expanduser("~"), "Downloads")  # Varsayılan Termux indirme klasörü
+        download_path = GetDownloadPath()
         PrintInfo(f"İndirme dizini: {download_path}")
 
         ydl_opts = {
@@ -170,7 +170,7 @@ def SesIndirme():
 
         # İndirilen dosyayı Android'in indirme klasörüne taşı
         downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
-        shutil.move(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0/Download", downloaded_filename))
+        os.rename(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0/Download", downloaded_filename))
 
         PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{downloaded_filename}")
 
