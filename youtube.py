@@ -134,20 +134,7 @@ def VideoIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        # İndirilen dosyayı Android'in indirme klasörüne taşı
-        downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
-        src_path = os.path.join(download_path, downloaded_filename)
-        dest_path = os.path.join("/storage/emulated/0/Download", downloaded_filename)
-
-        PrintInfo(f"Kopyalama işlemi başlıyor: {src_path} -> {dest_path}")
-
-        shutil.copy2(src_path, dest_path)
-        os.remove(src_path)
-
-        if os.path.exists(dest_path):
-            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {dest_path}")
-        else:
-            PrintError("Dosya kopyalama sırasında bir hata oluştu. Dosya bulunamadı.")
+        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
@@ -177,20 +164,7 @@ def SesIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        # İndirilen dosyayı Android'in indirme klasörüne taşı
-        downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
-        src_path = os.path.join(download_path, downloaded_filename)
-        dest_path = os.path.join("/storage/emulated/0/Download", downloaded_filename)
-        
-        PrintInfo(f"Kopyalama işlemi başlıyor: {src_path} -> {dest_path}")
-
-        shutil.copy2(src_path, dest_path)
-        os.remove(src_path)
-
-        if os.path.exists(dest_path):
-            PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {dest_path}")
-        else:
-            PrintError("Dosya kopyalama sırasında bir hata oluştu. Dosya bulunamadı.")
+        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
