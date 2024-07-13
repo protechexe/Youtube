@@ -39,13 +39,13 @@ def PrintMenu():
     print(tabulate(table, headers, tablefmt="grid"))
 
 def PrintInfo(message):
-    print(colored("[INFO] ","green") + message)
+    print(colored("[INFO] ", "green") + message)
 
 def PrintSuccess(message):
-    print(colored("[SUCCESS] ","light_green") + message)
+    print(colored("[SUCCESS] ", "light_green") + message)
 
 def PrintError(message):
-    print(colored("[ERROR] ","red") + message)
+    print(colored("[ERROR] ", "red") + message)
 
 def GetDownloadPath():
     system = platform.system()
@@ -55,7 +55,7 @@ def GetDownloadPath():
         return os.path.join(os.path.expanduser("~"), "Downloads")
     elif system == "Linux":
         return os.path.join(os.path.expanduser("~"), "Downloads")
-    elif system == "Android" or "Linux":
+    elif system == "Android":
         return "/storage/emulated/0/Download"
     else:
         raise Exception("Desteklenmeyen Platform")
@@ -70,14 +70,14 @@ def VideoBilgiCekme():
         time.sleep(1)
 
         print("-"*65)
-        PrintInfo("Video Başlığı:",url.title)
-        PrintInfo("Video Sahibi:",url.author)
-        PrintInfo("İzlenme Sayısı:",url.views)
-        PrintInfo("Video Uzunluğu:",url.length, "saniye")
+        PrintInfo("Video Başlığı: " + url.title)
+        PrintInfo("Video Sahibi: " + url.author)
+        PrintInfo("İzlenme Sayısı: " + str(url.views))
+        PrintInfo("Video Uzunluğu: " + str(url.length) + " saniye")
         print("-"*65)
 
     except Exception as e:
-        PrintError("Bir hata oluştu, lütfen tekrar dene..",e)
+        PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
 
     finally:
         print("-"*65)
@@ -85,7 +85,7 @@ def VideoBilgiCekme():
 
 def KucukResimIndirme():
     try:
-        url = YouTube(GetInput(" Lütfen Bir Youtube Linki Girin: "))
+        url = YouTube(GetInput("Lütfen Bir Youtube Linki Girin: "))
         PrintInfo("Resim indiriliyor, lütfen bekleyin..")
         time.sleep(1)
 
@@ -93,11 +93,11 @@ def KucukResimIndirme():
         time.sleep(1)
 
         print("-"*65)
-        PrintSuccess("Video Küçük Resmi:",url.thumbnail_url)
+        PrintSuccess("Video Küçük Resmi: " + url.thumbnail_url)
         print("-"*65)
 
     except Exception as e:
-        PrintError("Bir hata oluştu, lütfen tekrar dene..",e)
+        PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
 
     finally:
         print("-"*65)
@@ -110,17 +110,20 @@ def VideoIndirme():
         time.sleep(1)
 
         download_path = GetDownloadPath()
+        PrintInfo(f"İndirme dizini: {download_path}")
+
         if not os.path.exists(download_path):
             raise Exception("İndirme Dizini Bulunamadı.")
         
-        video = url.streams.filter(progressive="True").first()
+        video = url.streams.filter(progressive=True).first()
         if video is None:
             raise Exception("İndirilecek Uygun Video Akışı Bulunamadı.")
         
         PrintInfo("Video indirme işlemi başlıyor...")
         downloaded_file = video.download(output_path=download_path)
-        PrintInfo("Video indirildi, dosya kontrol ediliyor...")
+        PrintInfo(f"Video indirildi: {downloaded_file}")
 
+        # Dosya kontrolü
         if os.path.exists(downloaded_file):
             if platform.system() == "Android":
                 PrintInfo("Dosya Android paylaşılan depolama alanına taşınıyor...")
@@ -136,7 +139,7 @@ def VideoIndirme():
         PrintError("Lütfen tarayıcınızdan Youtube'a giriş yapın.")
 
     except Exception as e:
-        PrintError("Bir hata oluştu, lütfen tekrar dene..",e)
+        PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
 
     finally:
         print("-"*65)
@@ -149,6 +152,8 @@ def SesIndirme():
         time.sleep(1)
 
         download_path = GetDownloadPath()
+        PrintInfo(f"İndirme dizini: {download_path}")
+
         if not os.path.exists(download_path):
             raise Exception("İndirme Dizini Bulunamadı.")
         
@@ -158,8 +163,9 @@ def SesIndirme():
         
         PrintInfo("Ses indirme işlemi başlıyor...")
         downloaded_file = ses.download(output_path=download_path)
-        PrintInfo("Ses indirildi, dosya kontrol ediliyor...")
+        PrintInfo(f"Ses indirildi: {downloaded_file}")
 
+        # Dosya kontrolü
         if os.path.exists(downloaded_file):
             if platform.system() == "Android":
                 PrintInfo("Dosya Android paylaşılan depolama alanına taşınıyor...")
@@ -175,7 +181,7 @@ def SesIndirme():
         PrintError("Lütfen tarayıcınızdan Youtube'a giriş yapın.")
 
     except Exception as e:
-        PrintError("Bir hata oluştu, lütfen tekrar dene..",e)
+        PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
 
     finally:
         print("-"*65)
@@ -212,4 +218,4 @@ while True:
         time.sleep(1)
         break
     else:
-        PrintError("Lütfen yapmak istediğiniz işlemi numara ile girin..")
+        PrintInfo("Lütfen yapmak istediğiniz işlemi numara ile girin..")
