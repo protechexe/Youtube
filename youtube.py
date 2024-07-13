@@ -143,6 +143,10 @@ def VideoIndirme():
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
 
+    finally:
+        print("-"*65)
+        ProgramSuresi()
+
 def SesIndirme():
     try:
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
@@ -176,6 +180,7 @@ def SesIndirme():
     finally:
         print("-"*65)
         ProgramSuresi()
+
 
 while True:
     ClearScreen()
