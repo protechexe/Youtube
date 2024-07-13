@@ -4,6 +4,7 @@ from termcolor import colored
 from tabulate import tabulate
 import platform
 import time
+import sys
 import yt_dlp as youtube_dl
 
 def ClearScreen():
@@ -54,6 +55,11 @@ def GetDownloadPath():
     elif system == "Linux":
         return os.path.join(os.path.expanduser("~"), "Downloads")
     elif system == "Android":
+        # Check if Termux has storage access setup
+        if not os.path.exists("/storage/emulated/0/Download"):
+            PrintError("Lütfen Termux'da 'termux-setup-storage' komutunu çalıştırarak dosya erişim izinlerini ayarlayın.")
+            ProgramSuresi()
+            sys.exit(1)
         return "/storage/emulated/0/Download"
     else:
         raise Exception("Desteklenmeyen Platform")
@@ -115,11 +121,9 @@ def VideoIndirme():
     try:
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video İndiriliyor, lütfen bekleyin..")
-        print("-"*65)
 
         download_path = GetDownloadPath()
         PrintInfo(f"İndirme dizini: {download_path}")
-        print("-"*65)
 
         ydl_opts = {
             'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
@@ -129,7 +133,6 @@ def VideoIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        print("-"*65)
         PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
 
     except Exception as e:
@@ -143,11 +146,9 @@ def SesIndirme():
     try:
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video sese dönüştürülüyor, lütfen bekleyin..")
-        print("-"*65)
 
         download_path = GetDownloadPath()
         PrintInfo(f"İndirme dizini: {download_path}")
-        print("-"*65)
 
         ydl_opts = {
             'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
@@ -162,7 +163,6 @@ def SesIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        print("-"*65)
         PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
 
     except Exception as e:
