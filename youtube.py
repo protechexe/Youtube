@@ -134,7 +134,11 @@ def VideoIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
+        # Dosyayı Android'in ana dizinine kopyala
+        downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
+        shutil.copy(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0", downloaded_filename))
+
+        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/{downloaded_filename}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
@@ -164,7 +168,11 @@ def SesIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
+        # Dosyayı Android'in ana dizinine kopyala
+        downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
+        shutil.copy(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0", downloaded_filename))
+
+        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/{downloaded_filename}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
