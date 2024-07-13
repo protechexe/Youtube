@@ -1,4 +1,4 @@
 art
 termcolor
 tabulate
-pytube
+yt_dlp
