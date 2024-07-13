@@ -17,8 +17,7 @@ Programı kullanabilmek için bazı modül ve paketleri yüklemeniz gerekiyor. B
 3. Pytube Modülü
 
 bu modülleri kurup sonrasında terminal kodları ile programı kullanabilirsiniz. Bunun için terminal kod satırına;
-1. pip install art
-2. pip install tabulate
-3. pip install pytube
+
+pip install -r requirements.txt
 
 yazmanız yeterlidir. Sonrasında programı kullanabilirsiniz.
