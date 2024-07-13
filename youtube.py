@@ -136,9 +136,13 @@ def VideoIndirme():
 
         # İndirilen dosyayı Android'in indirme klasörüne taşı
         downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
-        os.rename(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0/Download", downloaded_filename))
+        src_path = os.path.join(download_path, downloaded_filename)
+        dest_path = os.path.join("/storage/emulated/0/Download", downloaded_filename)
+        
+        shutil.copy2(src_path, dest_path)
+        os.remove(src_path)
 
-        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{downloaded_filename}")
+        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {dest_path}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
@@ -170,9 +174,13 @@ def SesIndirme():
 
         # İndirilen dosyayı Android'in indirme klasörüne taşı
         downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
-        os.rename(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0/Download", downloaded_filename))
+        src_path = os.path.join(download_path, downloaded_filename)
+        dest_path = os.path.join("/storage/emulated/0/Download", downloaded_filename)
+        
+        shutil.copy2(src_path, dest_path)
+        os.remove(src_path)
 
-        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{downloaded_filename}")
+        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {dest_path}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
@@ -180,7 +188,6 @@ def SesIndirme():
     finally:
         print("-"*65)
         ProgramSuresi()
-
 
 while True:
     ClearScreen()
