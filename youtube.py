@@ -115,9 +115,11 @@ def VideoIndirme():
     try:
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video İndiriliyor, lütfen bekleyin..")
+        print("-"*65)
 
         download_path = GetDownloadPath()
         PrintInfo(f"İndirme dizini: {download_path}")
+        print("-"*65)
 
         ydl_opts = {
             'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
@@ -127,6 +129,7 @@ def VideoIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
+        print("-"*65)
         PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
 
     except Exception as e:
@@ -140,9 +143,11 @@ def SesIndirme():
     try:
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video sese dönüştürülüyor, lütfen bekleyin..")
+        print("-"*65)
 
         download_path = GetDownloadPath()
         PrintInfo(f"İndirme dizini: {download_path}")
+        print("-"*65)
 
         ydl_opts = {
             'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
@@ -157,6 +162,7 @@ def SesIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
+        print("-"*65)
         PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
 
     except Exception as e:
