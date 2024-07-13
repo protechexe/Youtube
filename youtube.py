@@ -70,10 +70,10 @@ def VideoBilgiCekme():
         time.sleep(1)
 
         print("-"*65)
-        print("Video Başlığı:",url.title)
-        print("Video Sahibi:",url.author)
-        print("İzlenme Sayısı:",url.views)
-        print("Video Uzunluğu:",url.length, "saniye")
+        PrintInfo("Video Başlığı:",url.title)
+        PrintInfo("Video Sahibi:",url.author)
+        PrintInfo("İzlenme Sayısı:",url.views)
+        PrintInfo("Video Uzunluğu:",url.length, "saniye")
         print("-"*65)
 
     except Exception as e:
@@ -119,9 +119,11 @@ def VideoIndirme():
         
         video.download(output_path=download_path)
 
-        # Dosyayı Android'un paylaşılan depolama alanına taşı
-        shutil.move(os.path.join(download_path, video.default_filename), os.path.join("/storage/emulated/0/Download", video.default_filename))
-        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{video.default_filename}")
+        if platform.system() == "Android":
+            shutil.copy(os.path.join(download_path, video.default_filename), os.path.join("/storage/emulated/0/Download", video.default_filename))
+            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{video.default_filename}")
+        else:
+            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{video.default_filename}")
 
     except AgeRestrictedError:
         PrintError("Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
@@ -150,9 +152,11 @@ def SesIndirme():
         
         ses.download(output_path=download_path)
 
-        # Dosyayı Android'un paylaşılan depolama alanına taşı
-        shutil.move(os.path.join(download_path, ses.default_filename), os.path.join("/storage/emulated/0/Download", ses.default_filename))
-        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{ses.default_filename}")
+        if platform.system() == "Android":
+            shutil.copy(os.path.join(download_path, ses.default_filename), os.path.join("/storage/emulated/0/Download", ses.default_filename))
+            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{ses.default_filename}")
+        else:
+            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{ses.default_filename}")
 
     except AgeRestrictedError:
         PrintError("Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
@@ -196,4 +200,4 @@ while True:
         time.sleep(1)
         break
     else:
-        print("Lütfen yapmak istediğiniz işlemi numara ile girin..")
+        PrintError("Lütfen yapmak istediğiniz işlemi numara ile girin..")
