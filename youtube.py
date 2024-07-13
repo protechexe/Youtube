@@ -55,7 +55,7 @@ def GetDownloadPath():
         return os.path.join(os.path.expanduser("~"), "Downloads")
     elif system == "Linux":
         return os.path.join(os.path.expanduser("~"), "Downloads")
-    elif system == "Android":
+    elif system == "Android" or "Linux":
         return "/storage/emulated/0/Download"
     else:
         raise Exception("Desteklenmeyen Platform")
@@ -117,11 +117,14 @@ def VideoIndirme():
         if video is None:
             raise Exception("İndirilecek Uygun Video Akışı Bulunamadı.")
         
+        PrintInfo("Video indirme işlemi başlıyor...")
         downloaded_file = video.download(output_path=download_path)
+        PrintInfo("Video indirildi, dosya kontrol ediliyor...")
 
         if os.path.exists(downloaded_file):
             if platform.system() == "Android":
-                shutil.copy(downloaded_file, os.path.join("/storage/emulated/0/Download", os.path.basename(downloaded_file)))
+                PrintInfo("Dosya Android paylaşılan depolama alanına taşınıyor...")
+                shutil.move(downloaded_file, os.path.join("/storage/emulated/0/Download", os.path.basename(downloaded_file)))
                 PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{os.path.basename(downloaded_file)}")
             else:
                 PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{os.path.basename(downloaded_file)}")
@@ -153,11 +156,14 @@ def SesIndirme():
         if ses is None:
             raise Exception("İndirilecek Uygun Ses Akışı Bulunamadı.")
         
+        PrintInfo("Ses indirme işlemi başlıyor...")
         downloaded_file = ses.download(output_path=download_path)
+        PrintInfo("Ses indirildi, dosya kontrol ediliyor...")
 
         if os.path.exists(downloaded_file):
             if platform.system() == "Android":
-                shutil.copy(downloaded_file, os.path.join("/storage/emulated/0/Download", os.path.basename(downloaded_file)))
+                PrintInfo("Dosya Android paylaşılan depolama alanına taşınıyor...")
+                shutil.move(downloaded_file, os.path.join("/storage/emulated/0/Download", os.path.basename(downloaded_file)))
                 PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{os.path.basename(downloaded_file)}")
             else:
                 PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{os.path.basename(downloaded_file)}")
