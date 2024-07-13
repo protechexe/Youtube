@@ -1,6 +1,7 @@
 import shutil
 import os
 from art import *
+from termcolor import colored
 from tabulate import tabulate
 from pytube import YouTube
 from pytube.exceptions import AgeRestrictedError
@@ -37,6 +38,15 @@ def PrintMenu():
     headers = ["İşlem","Numara"]
     print(tabulate(table, headers, tablefmt="grid"))
 
+def PrintInfo(message):
+    print(colored("[INFO] ","green") + message)
+
+def PrintSuccess(message):
+    print(colored("[SUCCESS] ","light_green") + message)
+
+def PrintError(message):
+    print(colored("[ERROR] ","red") + message)
+
 def GetDownloadPath():
     system = platform.system()
     if system == "Windows":
@@ -56,7 +66,7 @@ def GetInput(prompt):
 def VideoBilgiCekme():
     try:
         url = YouTube(GetInput("Lütfen Bir Youtube Linki Girin: "))
-        print("Bilgiler getiriliyor, lütfen bekleyin...")
+        PrintInfo("Bilgiler getiriliyor, lütfen bekleyin...")
         time.sleep(1)
 
         print("-"*65)
@@ -67,7 +77,7 @@ def VideoBilgiCekme():
         print("-"*65)
 
     except Exception as e:
-        print("Bir hata oluştu, lütfen tekrar dene..",e)
+        PrintError("Bir hata oluştu, lütfen tekrar dene..",e)
 
     finally:
         print("-"*65)
@@ -76,18 +86,18 @@ def VideoBilgiCekme():
 def KucukResimIndirme():
     try:
         url = YouTube(GetInput(" Lütfen Bir Youtube Linki Girin: "))
-        print("Resim indiriliyor, lütfen bekleyin..")
+        PrintInfo("Resim indiriliyor, lütfen bekleyin..")
         time.sleep(1)
 
-        print("[?] Resim link olarak indirildi, linke tıklayarak resmi görüntüleyebilirsiniz.")
+        PrintInfo("Resim link olarak indirildi, linke tıklayarak resmi görüntüleyebilirsiniz.")
         time.sleep(1)
 
         print("-"*65)
-        print("Video Küçük Resmi:",url.thumbnail_url)
+        PrintSuccess("Video Küçük Resmi:",url.thumbnail_url)
         print("-"*65)
 
     except Exception as e:
-        print("Bir hata oluştu, lütfen tekrar dene..",e)
+        PrintError("Bir hata oluştu, lütfen tekrar dene..",e)
 
     finally:
         print("-"*65)
@@ -96,7 +106,7 @@ def KucukResimIndirme():
 def VideoIndirme():
     try:
         url = YouTube(GetInput("Lütfen Bir Youtube Linki Girin: "))
-        print("Video İndiriliyor, lütfen bekleyin..")
+        PrintInfo("Video İndiriliyor, lütfen bekleyin..")
         time.sleep(1)
 
         download_path = GetDownloadPath()
@@ -111,14 +121,14 @@ def VideoIndirme():
 
         # Dosyayı Android'un paylaşılan depolama alanına taşı
         shutil.move(os.path.join(download_path, video.default_filename), os.path.join("/storage/emulated/0/Download", video.default_filename))
-        print(f"[?] Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{video.default_filename}")
+        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{video.default_filename}")
 
     except AgeRestrictedError:
-        print("[?] Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
-        print("[?] Lütfen tarayıcınızdan Youtube'a giriş yapın.")
+        PrintError("Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
+        PrintError("Lütfen tarayıcınızdan Youtube'a giriş yapın.")
 
     except Exception as e:
-        print("Bir hata oluştu, lütfen tekrar dene..",e)
+        PrintError("Bir hata oluştu, lütfen tekrar dene..",e)
 
     finally:
         print("-"*65)
@@ -127,7 +137,7 @@ def VideoIndirme():
 def SesIndirme():
     try:
         url = YouTube(GetInput("Lütfen Bir Youtube Linki Girin: "))
-        print("Video sese dönüştürülüyor, lütfen bekleyin..")
+        PrintInfo("Video sese dönüştürülüyor, lütfen bekleyin..")
         time.sleep(1)
 
         download_path = GetDownloadPath()
@@ -142,14 +152,14 @@ def SesIndirme():
 
         # Dosyayı Android'un paylaşılan depolama alanına taşı
         shutil.move(os.path.join(download_path, ses.default_filename), os.path.join("/storage/emulated/0/Download", ses.default_filename))
-        print(f"[?] Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{ses.default_filename}")
+        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{ses.default_filename}")
 
     except AgeRestrictedError:
-        print("[?] Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
-        print("[?] Lütfen tarayıcınızdan Youtube'a giriş yapın.")
+        PrintError("Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
+        PrintError("Lütfen tarayıcınızdan Youtube'a giriş yapın.")
 
     except Exception as e:
-        print("Bir hata oluştu, lütfen tekrar dene..",e)
+        PrintError("Bir hata oluştu, lütfen tekrar dene..",e)
 
     finally:
         print("-"*65)
@@ -162,15 +172,28 @@ while True:
 
     islem = GetInput("Bir işlem seçin (1-5): ")
     if islem == "1":
+        PrintInfo("Lütfen Bekleyin..")
+        time.sleep(1)
+        print("-"*65)
         VideoBilgiCekme()
     elif islem == "2":
+        PrintInfo("Lütfen Bekleyin..")
+        time.sleep(1)
+        print("-"*65)
         KucukResimIndirme()
     elif islem == "3":
+        PrintInfo("Lütfen Bekleyin..")
+        time.sleep(1)
+        print("-"*65)
         VideoIndirme()
     elif islem == "4":
+        PrintInfo("Lütfen Bekleyin..")
+        time.sleep(1)
+        print("-"*65)
         SesIndirme()
     elif islem == "5":
-        print("Çıkış Yapılıyor..")
+        PrintInfo("Çıkış Yapılıyor..")
+        time.sleep(1)
         break
     else:
         print("Lütfen yapmak istediğiniz işlemi numara ile girin..")
