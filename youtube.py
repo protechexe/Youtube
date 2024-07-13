@@ -117,13 +117,16 @@ def VideoIndirme():
         if video is None:
             raise Exception("İndirilecek Uygun Video Akışı Bulunamadı.")
         
-        video.download(output_path=download_path)
+        downloaded_file = video.download(output_path=download_path)
 
-        if platform.system() == "Android":
-            shutil.copy(os.path.join(download_path, video.default_filename), os.path.join("/storage/emulated/0/Download", video.default_filename))
-            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{video.default_filename}")
+        if os.path.exists(downloaded_file):
+            if platform.system() == "Android":
+                shutil.copy(downloaded_file, os.path.join("/storage/emulated/0/Download", os.path.basename(downloaded_file)))
+                PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{os.path.basename(downloaded_file)}")
+            else:
+                PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{os.path.basename(downloaded_file)}")
         else:
-            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{video.default_filename}")
+            raise Exception("Video indirme başarısız.")
 
     except AgeRestrictedError:
         PrintError("Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
@@ -150,13 +153,16 @@ def SesIndirme():
         if ses is None:
             raise Exception("İndirilecek Uygun Ses Akışı Bulunamadı.")
         
-        ses.download(output_path=download_path)
+        downloaded_file = ses.download(output_path=download_path)
 
-        if platform.system() == "Android":
-            shutil.copy(os.path.join(download_path, ses.default_filename), os.path.join("/storage/emulated/0/Download", ses.default_filename))
-            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{ses.default_filename}")
+        if os.path.exists(downloaded_file):
+            if platform.system() == "Android":
+                shutil.copy(downloaded_file, os.path.join("/storage/emulated/0/Download", os.path.basename(downloaded_file)))
+                PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{os.path.basename(downloaded_file)}")
+            else:
+                PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{os.path.basename(downloaded_file)}")
         else:
-            PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{ses.default_filename}")
+            raise Exception("Ses indirme başarısız.")
 
     except AgeRestrictedError:
         PrintError("Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
