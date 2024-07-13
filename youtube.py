@@ -1,12 +1,10 @@
-import shutil
 import os
 from art import *
 from termcolor import colored
 from tabulate import tabulate
-from pytube import YouTube
-from pytube.exceptions import AgeRestrictedError
 import platform
 import time
+import yt_dlp as youtube_dl
 
 def ClearScreen():
     os.system("cls" if os.name == "nt" else "clear")
@@ -65,16 +63,24 @@ def GetInput(prompt):
 
 def VideoBilgiCekme():
     try:
-        url = YouTube(GetInput("Lütfen Bir Youtube Linki Girin: "))
-        PrintInfo("Bilgiler getiriliyor, lütfen bekleyin...")
-        time.sleep(1)
+        url = GetInput("Lütfen Bir Youtube Linki Girin: ")
+        ydl_opts = {
+            'quiet': True,
+            'no_warnings': True,
+            'skip_download': True,
+        }
 
-        print("-"*65)
-        PrintInfo("Video Başlığı: " + url.title)
-        PrintInfo("Video Sahibi: " + url.author)
-        PrintInfo("İzlenme Sayısı: " + str(url.views))
-        PrintInfo("Video Uzunluğu: " + str(url.length) + " saniye")
-        print("-"*65)
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            info_dict = ydl.extract_info(url, download=False)
+            video_title = info_dict.get('title', None)
+            video_author = info_dict.get('uploader', None)
+            video_views = info_dict.get('view_count', None)
+            video_length = info_dict.get('duration', None)
+
+        PrintInfo(f"Video Başlığı: {video_title}")
+        PrintInfo(f"Video Sahibi: {video_author}")
+        PrintInfo(f"İzlenme Sayısı: {video_views}")
+        PrintInfo(f"Video Uzunluğu: {video_length} saniye")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
@@ -85,16 +91,18 @@ def VideoBilgiCekme():
 
 def KucukResimIndirme():
     try:
-        url = YouTube(GetInput("Lütfen Bir Youtube Linki Girin: "))
-        PrintInfo("Resim indiriliyor, lütfen bekleyin..")
-        time.sleep(1)
+        url = GetInput("Lütfen Bir Youtube Linki Girin: ")
+        ydl_opts = {
+            'quiet': True,
+            'no_warnings': True,
+            'skip_download': True,
+        }
 
-        PrintInfo("Resim link olarak indirildi, linke tıklayarak resmi görüntüleyebilirsiniz.")
-        time.sleep(1)
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            info_dict = ydl.extract_info(url, download=False)
+            thumbnail_url = info_dict.get('thumbnail', None)
 
-        print("-"*65)
-        PrintSuccess("Video Küçük Resmi: " + url.thumbnail_url)
-        print("-"*65)
+        PrintSuccess(f"Video Küçük Resmi: {thumbnail_url}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
@@ -105,38 +113,21 @@ def KucukResimIndirme():
 
 def VideoIndirme():
     try:
-        url = YouTube(GetInput("Lütfen Bir Youtube Linki Girin: "))
+        url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video İndiriliyor, lütfen bekleyin..")
-        time.sleep(1)
 
         download_path = GetDownloadPath()
         PrintInfo(f"İndirme dizini: {download_path}")
 
-        if not os.path.exists(download_path):
-            raise Exception("İndirme Dizini Bulunamadı.")
-        
-        video = url.streams.filter(progressive=True).first()
-        if video is None:
-            raise Exception("İndirilecek Uygun Video Akışı Bulunamadı.")
-        
-        PrintInfo("Video indirme işlemi başlıyor...")
-        downloaded_file = video.download(output_path=download_path)
-        PrintInfo(f"Video indirildi: {downloaded_file}")
+        ydl_opts = {
+            'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
+            'format': 'best',
+        }
 
-        # Dosya kontrolü
-        if os.path.exists(downloaded_file):
-            if platform.system() == "Android":
-                PrintInfo("Dosya Android paylaşılan depolama alanına taşınıyor...")
-                shutil.move(downloaded_file, os.path.join("/storage/emulated/0/Download", os.path.basename(downloaded_file)))
-                PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{os.path.basename(downloaded_file)}")
-            else:
-                PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{os.path.basename(downloaded_file)}")
-        else:
-            raise Exception("Video indirme başarısız.")
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
 
-    except AgeRestrictedError:
-        PrintError("Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
-        PrintError("Lütfen tarayıcınızdan Youtube'a giriş yapın.")
+        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
@@ -147,38 +138,26 @@ def VideoIndirme():
 
 def SesIndirme():
     try:
-        url = YouTube(GetInput("Lütfen Bir Youtube Linki Girin: "))
+        url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video sese dönüştürülüyor, lütfen bekleyin..")
-        time.sleep(1)
 
         download_path = GetDownloadPath()
         PrintInfo(f"İndirme dizini: {download_path}")
 
-        if not os.path.exists(download_path):
-            raise Exception("İndirme Dizini Bulunamadı.")
-        
-        ses = url.streams.filter(mime_type="audio/mp4").first()
-        if ses is None:
-            raise Exception("İndirilecek Uygun Ses Akışı Bulunamadı.")
-        
-        PrintInfo("Ses indirme işlemi başlıyor...")
-        downloaded_file = ses.download(output_path=download_path)
-        PrintInfo(f"Ses indirildi: {downloaded_file}")
+        ydl_opts = {
+            'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
 
-        # Dosya kontrolü
-        if os.path.exists(downloaded_file):
-            if platform.system() == "Android":
-                PrintInfo("Dosya Android paylaşılan depolama alanına taşınıyor...")
-                shutil.move(downloaded_file, os.path.join("/storage/emulated/0/Download", os.path.basename(downloaded_file)))
-                PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{os.path.basename(downloaded_file)}")
-            else:
-                PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}/{os.path.basename(downloaded_file)}")
-        else:
-            raise Exception("Ses indirme başarısız.")
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
 
-    except AgeRestrictedError:
-        PrintError("Bu videoyu indirmek için Youtube'a giriş yapmanız gerekmektedir.")
-        PrintError("Lütfen tarayıcınızdan Youtube'a giriş yapın.")
+        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
@@ -218,4 +197,4 @@ while True:
         time.sleep(1)
         break
     else:
-        PrintInfo("Lütfen yapmak istediğiniz işlemi numara ile girin..")
+        print("Lütfen yapmak istediğiniz işlemi numara ile girin..")
