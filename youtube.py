@@ -1,4 +1,5 @@
 import os
+import shutil
 from art import *
 from termcolor import colored
 from tabulate import tabulate
@@ -122,7 +123,7 @@ def VideoIndirme():
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video İndiriliyor, lütfen bekleyin..")
 
-        download_path = GetDownloadPath()
+        download_path = os.path.join(os.path.expanduser("~"), "Downloads")  # Varsayılan Termux indirme klasörü
         PrintInfo(f"İndirme dizini: {download_path}")
 
         ydl_opts = {
@@ -133,21 +134,21 @@ def VideoIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
+        # İndirilen dosyayı Android'in indirme klasörüne taşı
+        downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
+        shutil.move(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0/Download", downloaded_filename))
+
+        PrintSuccess(f"Video İndirme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{downloaded_filename}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
-
-    finally:
-        print("-"*65)
-        ProgramSuresi()
 
 def SesIndirme():
     try:
         url = GetInput("Lütfen Bir Youtube Linki Girin: ")
         PrintInfo("Video sese dönüştürülüyor, lütfen bekleyin..")
 
-        download_path = GetDownloadPath()
+        download_path = os.path.join(os.path.expanduser("~"), "Downloads")  # Varsayılan Termux indirme klasörü
         PrintInfo(f"İndirme dizini: {download_path}")
 
         ydl_opts = {
@@ -163,7 +164,11 @@ def SesIndirme():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: {download_path}")
+        # İndirilen dosyayı Android'in indirme klasörüne taşı
+        downloaded_filename = os.path.basename(ydl.prepare_filename(ydl.extract_info(url)))
+        shutil.move(os.path.join(download_path, downloaded_filename), os.path.join("/storage/emulated/0/Download", downloaded_filename))
+
+        PrintSuccess(f"Videodan Ses Dönüştürme İşlemi Tamamlandı. İndirilen Dizin: /storage/emulated/0/Download/{downloaded_filename}")
 
     except Exception as e:
         PrintError("Bir hata oluştu, lütfen tekrar deneyin. " + str(e))
